@@ -21,8 +21,8 @@
 
 LCM_DRIVER *lcm_driver_list[] = {
 
-#if defined(S6D7AA0_DSI_VDO_COMMON)
-	&s6d7aa0_dsi_vdo_common_lcm_drv,
+#if defined(ST7701_FWGAPLUS_DSI_VDO_HELITAI_VP531)
+	&st7701_fwgaplus_dsi_vdo_helitai_vp531_lcm_drv,
 #endif
 };
 
