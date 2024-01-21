@@ -1,3 +1,9 @@
+name: Build Kernel
+
+on:
+  push:
+    branches:
+      - master
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -19,15 +25,7 @@ jobs:
     - name: Set up ccache
       uses: hendrikmuhs/ccache-action@v1.2
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update -y
-        sudo apt install gcc-aarch64-linux-gnu -y
-        sudo apt install gcc-arm-linux-gnueabi -y
-        sudo apt install binutils make python3 libssl-dev build-essential bc bison flex unzip libssl-dev ca-certificates xz-utils mkbootimg cpio device-tree-compiler git git-lfs -y
-        git clone https://github.com/kdrag0n/proton-clang --dept=1 -b master
-        make clean
-        make mrproper
+    # Rest of your steps...
 
     - name: GetTime
       id: get_time
