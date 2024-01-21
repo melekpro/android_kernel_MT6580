@@ -22,7 +22,7 @@ jobs:
         fetch-depth: 100
 
     - name: Set up ccache
-      uses: melekpro/ccache-action@v1.2
+      uses: hendrikmuhs/ccache-action@v1.2
 
     # Rest of your steps...
 
