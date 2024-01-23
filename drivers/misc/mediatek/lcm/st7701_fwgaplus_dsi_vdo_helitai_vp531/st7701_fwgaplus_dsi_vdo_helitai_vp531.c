@@ -18,8 +18,8 @@
 #define UDELAY(n) (lcm_util.udelay(n))
 #define MDELAY(n) (lcm_util.mdelay(n))
 
-#define REGFLAG_DELAY 			0xFE0F
-#define REGFLAG_END_OF_TABLE 	0xFF0F
+#define REGFLAG_DELAY         0xFE0FU
+#define REGFLAG_END_OF_TABLE  0xFF0FU
 
 /* Local Functions */
 #define dsi_set_cmdq_V3(para_tbl,size,force_update)         lcm_util.dsi_set_cmdq_V3(para_tbl,size,force_update)
