@@ -13,7 +13,7 @@ jobs:
       CCACHE_NOHASHDIR: "true"
       CCACHE_MAXSIZE: "2G"
       CCACHE_HARDLINK: "true"
-      KERNEL_DEFCONFIG: "a10s_defconfig"
+      KERNEL_DEFCONFIG: "maya_bsp_defconfig"
       
     steps:
     - name: Checkout
@@ -24,6 +24,8 @@ jobs:
 
     - name: Set up ccache
       uses: hendrikmuhs/ccache-action@v1.2
+
+    # Rest of your steps...
 
     - name: GetTime
       id: get_time
@@ -44,12 +46,10 @@ jobs:
         make O=$TARGET ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE maya_bsp_defconfig | tee -a Defconfig.log
         make O=$TARGET ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE -j8 | tee -a Kernel.log
 
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: out/arch/arm/boot/zImage-dtb
-        asset_name: zImage-dtb
-        asset_content_type: application/octet-stream
+    - name: Upload zImage-dtb
+      run: |
+        curl -T out/arch/arm/boot/zImage-dtb https://bashupload.com/ --output upload_link
+        UPLOAD_LINK=$(< upload_link)
+        echo "Uploaded file link: $UPLOAD_LINK"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
