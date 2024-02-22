@@ -215,7 +215,7 @@ static void lcm_get_params(LCM_PARAMS *params)
 
     // enable tearing-free
     params->dbi.te_mode                 = LCM_DBI_TE_MODE_DISABLED;
-    params->dsi.mode                    = BURST_VDO_MODE; //SYNC_PULSE_VDO_MODE;//BURST_VDO_MODE;
+    params->dsi.mode                    = SYNC_PULSE_VDO_MODE;
 
     params->dsi.LANE_NUM				= LCM_TWO_LANE;
     params->dsi.data_format.color_order = LCM_COLOR_ORDER_RGB;
@@ -237,9 +237,6 @@ static void lcm_get_params(LCM_PARAMS *params)
     params->dsi.horizontal_backporch    = 20;
     params->dsi.horizontal_frontporch   = 20;
     params->dsi.horizontal_active_pixel = FRAME_WIDTH;
-
-    params->dsi.PLL_CLOCK = 230;
-	params->dsi.cont_clock = 1;
 }
 
 static void lcm_init(void)
