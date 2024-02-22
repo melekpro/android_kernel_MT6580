@@ -23,9 +23,6 @@ LCM_DRIVER *lcm_driver_list[] = {
 
 #if defined(GC9503P_FWP_DSI_VDO_JT_IVO_BA2)
 	&gc9503p_fwp_dsi_vdo_jt_ivo_ba2_lcm_drv,
-
-#if defined(ST7701_FWGAPLUS_DSI_VDO_HELITAI_VP531)
-	&st7701_fwgaplus_dsi_vdo_helitai_vp531_lcm_drv,
 #endif
 };
 
