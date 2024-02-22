@@ -237,6 +237,8 @@ static void lcm_get_params(LCM_PARAMS *params)
     params->dsi.horizontal_backporch    = 20;
     params->dsi.horizontal_frontporch   = 20;
     params->dsi.horizontal_active_pixel = FRAME_WIDTH;
+    params->dsi.PLL_CLOCK = 230;
+	params->dsi.cont_clock = 1;
 }
 
 static void lcm_init(void)
