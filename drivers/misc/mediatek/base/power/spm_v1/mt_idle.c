@@ -298,6 +298,10 @@ int __attribute__((weak)) hps_restart_timer(void)
 	return 0;
 }
 
+int __attribute__((weak)) is_teei_ready(void)
+{
+ return 1;
+}
 void __attribute__((weak)) MMProfileEnable(int enable)
 {
 
