@@ -52,9 +52,9 @@ def write_header(output_file, input_file, dtb_list):
 		head[8 + i] = struct.pack('I', offset)
 		i = i + 1
 
-	with open(output_file, 'w') as fo:
+	with open(output_file, 'wb') as fo:
 		for item in head:
-			fo.write("%s" % item)
+			fo.write(item)
 		with open(input_file, 'rb') as fi:
 			for line in fi.readlines():
 				fo.write(line)
