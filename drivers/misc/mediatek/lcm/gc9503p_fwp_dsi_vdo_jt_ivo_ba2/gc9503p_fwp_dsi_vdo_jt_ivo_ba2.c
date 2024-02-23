@@ -262,6 +262,5 @@ LCM_DRIVER gc9503p_fwp_dsi_vdo_jt_ivo_ba2_lcm_drv = {
 	.suspend = lcm_suspend,
 	.resume = lcm_resume,
 	.compare_id = lcm_compare_id,
-#if     defined(CONFIG_TRAN_LCM_TIME_OPT_ENABLE)
 };
 #endif
