@@ -201,31 +201,37 @@ static void lcm_set_util_funcs(const LCM_UTIL_FUNCS *util)
 static void lcm_get_params(LCM_PARAMS *params)
 {
 	memset(params, 0, sizeof(LCM_PARAMS));
-
-	params->type = LCM_TYPE_DPI;
-	params->width = FRAME_WIDTH;
-	params->height = FRAME_HEIGHT;
-
-	params->dpi.PLL_CLOCK = 72;
-
-	params->dpi.width = FRAME_WIDTH;
-	params->dpi.height = FRAME_HEIGHT;
-
-	params->dpi.clk_pol = LCM_POLARITY_FALLING;
-	params->dpi.de_pol = LCM_POLARITY_RISING;
-	params->dpi.vsync_pol = LCM_POLARITY_FALLING;
-	params->dpi.hsync_pol = LCM_POLARITY_FALLING;
-
-	params->dpi.hsync_pulse_width = HSYNC_PULSE_WIDTH;
-	params->dpi.hsync_back_porch = HSYNC_BACK_PORCH;
-	params->dpi.hsync_front_porch = HSYNC_FRONT_PORCH;
-	params->dpi.vsync_pulse_width = VSYNC_PULSE_WIDTH;
-	params->dpi.vsync_back_porch = VSYNC_BACK_PORCH;
-	params->dpi.vsync_front_porch = VSYNC_FRONT_PORCH;
-
-	params->dpi.lvds_tx_en = 1;
-	params->dpi.format = LCM_DPI_FORMAT_RGB888;
-	params->dpi.rgb_order = LCM_COLOR_ORDER_RGB;
+    params->type   = LCM_TYPE_DSI;
+    params->width  = FRAME_WIDTH;
+    params->height = FRAME_HEIGHT;
+	
+#ifndef BUILD_LK
+	params->physical_width               = 62;     //LCM_PHYSICAL_WIDTH/1000;
+	params->physical_height              = 124;    //LCM_PHYSICAL_HEIGHT/1000;
+	params->physical_width_um            = 61877;  //LCM_PHYSICAL_WIDTH; = sqrt((size*25.4)^2/(18^2+9^2))*9*1000
+	params->physical_height_um           = 123754; //LCM_PHYSICAL_HEIGHT; = sqrt((size*25.4)^2/(18^2+9^2))*18*1000
+#endif
+    // enable tearing-free
+    params->dbi.te_mode                 = LCM_DBI_TE_MODE_DISABLED;
+    params->dsi.mode                    = SYNC_PULSE_VDO_MODE;
+    params->dsi.LANE_NUM				= LCM_TWO_LANE;
+    params->dsi.data_format.color_order = LCM_COLOR_ORDER_RGB;
+    params->dsi.data_format.trans_seq   = LCM_DSI_TRANS_SEQ_MSB_FIRST;
+    params->dsi.data_format.padding     = LCM_DSI_PADDING_ON_LSB;
+    params->dsi.data_format.format      = LCM_DSI_FORMAT_RGB888;
+    params->dsi.packet_size = 256;
+    params->dsi.PS                      = LCM_PACKED_PS_24BIT_RGB888;
+    params->dsi.word_count              = FRAME_WIDTH * 3;
+    params->dsi.vertical_sync_active    = 8;
+    params->dsi.vertical_backporch      = 30;
+    params->dsi.vertical_frontporch     = 12;
+    params->dsi.vertical_active_line    = FRAME_HEIGHT;
+    params->dsi.horizontal_sync_active  = 10;
+    params->dsi.horizontal_backporch    = 20;
+    params->dsi.horizontal_frontporch   = 20;
+    params->dsi.horizontal_active_pixel = FRAME_WIDTH;
+    params->dsi.PLL_CLOCK = 230;
+	params->dsi.cont_clock = 1;
 
 }
 static void lcm_init(void)
