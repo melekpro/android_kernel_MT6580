@@ -200,73 +200,34 @@ static void lcm_set_util_funcs(const LCM_UTIL_FUNCS *util)
 
 static void lcm_get_params(LCM_PARAMS *params)
 {
-    memset(params, 0, sizeof(LCM_PARAMS));
+	memset(params, 0, sizeof(LCM_PARAMS));
 
-    params->type   = LCM_TYPE_DSI;
+	params->type = LCM_TYPE_DPI;
+	params->width = FRAME_WIDTH;
+	params->height = FRAME_HEIGHT;
 
-    params->width  = FRAME_WIDTH;
-    params->height = FRAME_HEIGHT;
-    params->lcm_if = LCM_INTERFACE_DSI0;
-    params->lcm_cmd_if = LCM_INTERFACE_DSI0;
-        /* add for *#88* flicker test */
-    params->inversion = LCM_INVERSIONE_COLUMN;
-    g_lcm_inversion = LCM_INVERSIONE_COLUMN;
+	params->dpi.PLL_CLOCK = 72;
 
-#ifdef CONFIG_TRAN_LCM_SET_VOLTAGE
-    lcm_bias_vol = LCM_BIAS_VOLTAGE;
-#endif
+	params->dpi.width = FRAME_WIDTH;
+	params->dpi.height = FRAME_HEIGHT;
 
-#if (LCM_DSI_CMD_MODE)
-    params->dsi.mode   = CMD_MODE;
-#else
-    //params->dsi.mode   = BURST_VDO_MODE;
-    params->dsi.mode = SYNC_PULSE_VDO_MODE;
-    params->dsi.switch_mode = CMD_MODE;
-    lcm_dsi_mode = SYNC_PULSE_VDO_MODE;
-#endif
+	params->dpi.clk_pol = LCM_POLARITY_FALLING;
+	params->dpi.de_pol = LCM_POLARITY_RISING;
+	params->dpi.vsync_pol = LCM_POLARITY_FALLING;
+	params->dpi.hsync_pol = LCM_POLARITY_FALLING;
 
-    /* Command mode setting */
-    params->dsi.LANE_NUM                    = LCM_FOUR_LANE;
+	params->dpi.hsync_pulse_width = HSYNC_PULSE_WIDTH;
+	params->dpi.hsync_back_porch = HSYNC_BACK_PORCH;
+	params->dpi.hsync_front_porch = HSYNC_FRONT_PORCH;
+	params->dpi.vsync_pulse_width = VSYNC_PULSE_WIDTH;
+	params->dpi.vsync_back_porch = VSYNC_BACK_PORCH;
+	params->dpi.vsync_front_porch = VSYNC_FRONT_PORCH;
 
-    /* The following defined the fomat for data coming from LCD engine. */
-    params->dsi.data_format.color_order     = LCM_COLOR_ORDER_RGB;
-    params->dsi.data_format.trans_seq       = LCM_DSI_TRANS_SEQ_MSB_FIRST;
-    params->dsi.data_format.padding         = LCM_DSI_PADDING_ON_LSB;
-    params->dsi.data_format.format          = LCM_DSI_FORMAT_RGB888;
-
-    /* Highly depends on LCD driver capability */
-
-    /* video mode timing */
-    params->dsi.PS=LCM_PACKED_PS_24BIT_RGB888;
-    params->dsi.vertical_sync_active                = 8;
-    params->dsi.vertical_backporch                  = 8;
-    params->dsi.vertical_frontporch                 = 16;
-    params->dsi.vertical_active_line                = FRAME_HEIGHT;
-    params->dsi.horizontal_sync_active              = 10;
-    params->dsi.horizontal_backporch                = 12;
-    params->dsi.horizontal_frontporch               = 50;
-    params->dsi.horizontal_active_pixel             = FRAME_WIDTH;
-
-    /* this value must be in MTK suggested table */
-
-    params->dsi.ssc_disable                         = 0;
-    params->dsi.ssc_range                           = 4;
-    params->dsi.HS_TRAIL                            = 15;
-
-    params->dsi.PLL_CLOCK = 492;
-    params->dsi.noncont_clock = 1;
-    params->dsi.noncont_clock_period = 1;
-
-    params->dsi.esd_check_enable = 0;
-    params->dsi.customization_esd_check_enable      = 0;
-    params->dsi.clk_lp_per_line_enable = 0;
-    params->dsi.lcm_esd_check_table[0].cmd          = 0x0a;
-    params->dsi.lcm_esd_check_table[0].count        = 1;
-    params->dsi.lcm_esd_check_table[0].para_list[0] = 0x9c;
-
+	params->dpi.lvds_tx_en = 1;
+	params->dpi.format = LCM_DPI_FORMAT_RGB888;
+	params->dpi.rgb_order = LCM_COLOR_ORDER_RGB;
 
 }
-
 static void lcm_init(void)
 {
 	SET_RESET_PIN(1);
