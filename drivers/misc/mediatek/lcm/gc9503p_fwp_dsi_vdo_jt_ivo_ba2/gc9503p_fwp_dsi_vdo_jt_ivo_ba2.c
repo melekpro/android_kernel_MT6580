@@ -247,33 +247,15 @@ static void lcm_get_params(LCM_PARAMS *params)
 	params->dsi.lcm_esd_check_table[0].para_list[0] = 0x9c;
 }
 
-static void set_ldo_control(int level)
-{
-	if (level)
-	{
-		display_ldo18_enable(1);
-		MDELAY(2);
-		display_ldo28_enable(1);
-	}
-	else
-	{
-		display_ldo28_enable(0);
-		MDELAY(2);
-		display_ldo18_enable(0);
-	}
-}
-
 static void lcm_init(void)
 {
-	set_ldo_control(1);
 	MDELAY(10);
-	display_rst_enable(1);
+	SET_RESET_PIN(1);
 	MDELAY(10);
-	display_rst_enable(0);
+	SET_RESET_PIN(0);
 	MDELAY(10);
-	display_rst_enable(1);
+	SET_RESET_PIN(1);
 	MDELAY(50);
-
 #ifdef BUILD_LK
 	printf("cjx:%s\n", __func__);
 #else
@@ -286,11 +268,13 @@ static void lcm_init(void)
 static void lcm_suspend(void)
 {
 	push_table(lcm_sleep_mode_in_setting, sizeof(lcm_sleep_mode_in_setting) / sizeof(struct LCM_setting_table), 1);
+
+	SET_RESET_PIN(1);
 	MDELAY(10);
-	display_rst_enable(0);
+	SET_RESET_PIN(0);
 	MDELAY(10);
-	set_ldo_control(0);
-	MDELAY(10);
+	SET_RESET_PIN(1);
+	MDELAY(120);
 }
 
 static unsigned int lcm_compare_id(void)
