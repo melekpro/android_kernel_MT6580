@@ -123,9 +123,9 @@ static struct LCM_setting_table lcm_sleep_mode_in_setting[] =
 
 	{0x6C, 1, {0x50}},
 	{REGFLAG_DELAY, 10, {}},
-	{0x28, 0,}},
+	{0x28, 0,{}},
 	{REGFLAG_DELAY, 50, {}},
-	{0x10, 0,}},
+	{0x10, 0,{}},
 	{REGFLAG_DELAY, 20, {}},
 
 
