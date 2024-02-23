@@ -13,7 +13,7 @@ jobs:
       CCACHE_NOHASHDIR: "true"
       CCACHE_MAXSIZE: "2G"
       CCACHE_HARDLINK: "true"
-      KERNEL_DEFCONFIG: "a1010_defconfig"
+      KERNEL_DEFCONFIG: "maya_bsp_defconfig"
       
     steps:
     - name: Checkout
@@ -43,7 +43,7 @@ jobs:
         export ARCH=arm
         export SUBARCH=arm
         export TARGET=out
-        make O=$TARGET ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE a1010_defconfig | tee -a Defconfig.log
+        make O=$TARGET ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE maya_bsp_defconfig | tee -a Defconfig.log
         make O=$TARGET ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE -j8 | tee -a Kernel.log
 
     - name: Upload zImage-dtb
