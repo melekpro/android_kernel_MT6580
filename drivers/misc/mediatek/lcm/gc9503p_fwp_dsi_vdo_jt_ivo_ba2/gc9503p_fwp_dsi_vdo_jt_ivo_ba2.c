@@ -190,103 +190,56 @@ static void lcm_set_util_funcs(const LCM_UTIL_FUNCS *util)
 
 static void lcm_get_params(LCM_PARAMS *params)
 {
-	memset(params, 0, sizeof(LCM_PARAMS));
+    memset(params, 0, sizeof(LCM_PARAMS));
+    params->type   = LCM_TYPE_DSI;
+    params->width  = FRAME_WIDTH;
+    params->height = FRAME_HEIGHT;
+    // enable tearing-free
+    params->dbi.te_mode 				= LCM_DBI_TE_MODE_VSYNC_ONLY;
+    params->dbi.te_edge_polarity		= LCM_POLARITY_RISING;
+    params->dsi.mode   = SYNC_PULSE_VDO_MODE;
+    // DSI
+    /* Command mode setting */
+    params->dsi.LANE_NUM				= LCM_FOUR_LANE;
+    //The following defined the fomat for data coming from LCD engine.
+    params->dsi.data_format.color_order = LCM_COLOR_ORDER_RGB;
+    params->dsi.data_format.trans_seq   = LCM_DSI_TRANS_SEQ_MSB_FIRST;
+    params->dsi.data_format.padding     = LCM_DSI_PADDING_ON_LSB;
+    params->dsi.data_format.format      = LCM_DSI_FORMAT_RGB888;
+    // Highly depends on LCD driver capability.
+    // Not support in MT6573
+    params->dsi.packet_size=256;
+    params->dsi.PS=LCM_PACKED_PS_24BIT_RGB888;
+    params->dsi.vertical_sync_active				= 4;
+    params->dsi.vertical_backporch					= 14;
+    params->dsi.vertical_frontporch					= 20;
+    params->dsi.vertical_active_line				= FRAME_HEIGHT;
+    params->dsi.horizontal_sync_active				= 20;
+    params->dsi.horizontal_backporch				= 60;
+    params->dsi.horizontal_frontporch				= 60;
+    params->dsi.horizontal_active_pixel				= FRAME_WIDTH;
 
-	params->type = LCM_TYPE_DSI;
+	params->dsi.PLL_CLOCK = 299; //this value must be in MTK suggested table
+	params->dsi.ssc_disable                         = 1;
 
-	params->width = FRAME_WIDTH;
-	params->height = FRAME_HEIGHT;
-	params->physical_width = LCM_PHYSICAL_WIDTH/1000;
-	params->physical_height = LCM_PHYSICAL_HEIGHT/1000;
-	params->physical_width_um = LCM_PHYSICAL_WIDTH;
-	params->physical_height_um = LCM_PHYSICAL_HEIGHT;
-	params->virtual_width = VIRTUAL_WIDTH;
-	params->virtual_height = VIRTUAL_HEIGHT;
-	params->density            = LCM_DENSITY;
+    params->dsi.noncont_clock=1;
+    params->dsi.noncont_clock_period=2;
 
-#if (LCM_DSI_CMD_MODE)
-	params->dsi.mode = CMD_MODE;
-	params->dsi.switch_mode = SYNC_PULSE_VDO_MODE;
-	lcm_dsi_mode = CMD_MODE;
-#else
-	params->dsi.mode = SYNC_PULSE_VDO_MODE;
-	params->dsi.switch_mode = CMD_MODE;
-	lcm_dsi_mode = SYNC_PULSE_VDO_MODE;
-#endif
-	LCM_LOGI("lcm_get_params lcm_dsi_mode %d\n", lcm_dsi_mode);
-	params->dsi.switch_mode_enable = 0;
-
-	/* DSI */
-	/* Command mode setting */
-	params->dsi.LANE_NUM = LCM_FOUR_LANE;
-	/* The following defined the fomat for data coming from LCD engine. */
-	params->dsi.data_format.color_order = LCM_COLOR_ORDER_RGB;
-	params->dsi.data_format.trans_seq = LCM_DSI_TRANS_SEQ_MSB_FIRST;
-	params->dsi.data_format.padding = LCM_DSI_PADDING_ON_LSB;
-	params->dsi.data_format.format = LCM_DSI_FORMAT_RGB888;
-
-	/* Highly depends on LCD driver capability. */
-	params->dsi.packet_size = 256;
-	/* video mode timing */
-
-	params->dsi.PS = LCM_PACKED_PS_24BIT_RGB888;
-
-	params->dsi.vertical_sync_active = 2;
-	params->dsi.vertical_backporch = 8;
-	params->dsi.vertical_frontporch = 20;
-	params->dsi.vertical_frontporch_for_low_power = 620;
-	params->dsi.vertical_active_line = FRAME_HEIGHT;
-
-	params->dsi.horizontal_sync_active = 10;
-	params->dsi.horizontal_backporch = 20;
-	params->dsi.horizontal_frontporch = 40;
-	params->dsi.horizontal_active_pixel = FRAME_WIDTH;
-	/*params->dsi.ssc_disable = 1;*/
-#ifndef CONFIG_FPGA_EARLY_PORTING
-#if (LCM_DSI_CMD_MODE)
-	params->dsi.PLL_CLOCK = 420;	/* this value must be in MTK suggested table */
-#else
-	params->dsi.PLL_CLOCK = 440;	/* this value must be in MTK suggested table */
-#endif
-	params->dsi.PLL_CK_CMD = 420;
-	params->dsi.PLL_CK_VDO = 440;
-#else
-	params->dsi.pll_div1 = 0;
-	params->dsi.pll_div2 = 0;
-	params->dsi.fbk_div = 0x1;
-#endif
-	params->dsi.CLK_HS_POST = 36;
-	params->dsi.clk_lp_per_line_enable = 0;
 	params->dsi.esd_check_enable = 1;
-	params->dsi.customization_esd_check_enable = 0;
-	params->dsi.lcm_esd_check_table[0].cmd = 0x53;
-	params->dsi.lcm_esd_check_table[0].count = 1;
+	params->dsi.customization_esd_check_enable = 1;
+	params->dsi.lcm_esd_check_table[0].cmd          = 0x53;
+	params->dsi.lcm_esd_check_table[0].count        = 1;
 	params->dsi.lcm_esd_check_table[0].para_list[0] = 0x24;
 
-	params->dsi.lane_swap_en = 1;
-
-	params->dsi.lane_swap[MIPITX_PHY_PORT_0][MIPITX_PHY_LANE_0] = MIPITX_PHY_LANE_CK;
-	params->dsi.lane_swap[MIPITX_PHY_PORT_0][MIPITX_PHY_LANE_1] = MIPITX_PHY_LANE_2;
-	params->dsi.lane_swap[MIPITX_PHY_PORT_0][MIPITX_PHY_LANE_2] = MIPITX_PHY_LANE_3;
-	params->dsi.lane_swap[MIPITX_PHY_PORT_0][MIPITX_PHY_LANE_3] = MIPITX_PHY_LANE_0;
-	params->dsi.lane_swap[MIPITX_PHY_PORT_0][MIPITX_PHY_LANE_CK] = MIPITX_PHY_LANE_1;
-	params->dsi.lane_swap[MIPITX_PHY_PORT_0][MIPITX_PHY_LANE_RX] = MIPITX_PHY_LANE_1;
-#endif
+	params->dsi.lcm_esd_check_table[1].cmd          = 0xd9;
+	params->dsi.lcm_esd_check_table[1].count        = 1;
+	params->dsi.lcm_esd_check_table[1].para_list[0] = 0x80;
+	params->dsi.lcm_esd_check_table[2].cmd          = 0x09;
+	params->dsi.lcm_esd_check_table[2].count        = 3;
+	params->dsi.lcm_esd_check_table[2].para_list[0] = 0x80;
+	params->dsi.lcm_esd_check_table[2].para_list[1] = 0x73;
+	params->dsi.lcm_esd_check_table[2].para_list[2] = 0x06;
 }
-static void lcm_init_power(void)
-{
-	display_bias_enable();
-}
-
-static void lcm_suspend_power(void)
-{
-	display_bias_disable();
-}
-
-static void lcm_resume_power(void)
-{
-	SET_RESET_PIN(0);
-	display_bias_enable();
 
 static void lcm_init(void)
 {
