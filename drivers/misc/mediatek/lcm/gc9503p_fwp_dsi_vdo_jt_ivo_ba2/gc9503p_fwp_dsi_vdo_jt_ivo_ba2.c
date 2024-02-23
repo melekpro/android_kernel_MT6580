@@ -289,7 +289,4 @@ LCM_DRIVER gc9503p_fwp_dsi_vdo_jt_ivo_ba2_lcm_drv = {
 	.suspend = lcm_suspend,
 	.resume = lcm_resume,
 	.compare_id = lcm_compare_id,
-	.init_power = lcm_init_power,
-        .resume_power = lcm_resume_power,
-	.suspend_power = lcm_suspend_power,
 };
