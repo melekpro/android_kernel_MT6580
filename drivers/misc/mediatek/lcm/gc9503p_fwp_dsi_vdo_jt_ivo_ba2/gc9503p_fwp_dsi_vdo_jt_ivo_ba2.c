@@ -258,18 +258,6 @@ static void lcm_resume(void)
     UDELAY(5000);
 }
 
-static void lcm_display_on(void)
-{
-    unsigned int time_diff;
-
-    system_time_after = jiffies_to_msecs(jiffies);
-    time_diff = system_time_after - system_time_before;
-
-    if (time_diff <= 49)
-    {
-        MDELAY(50 - time_diff);
-    }
-}
 LCM_DRIVER gc9503p_fwp_dsi_vdo_jt_ivo_ba2_lcm_drv = {
     .name = "gc9503p_fwp_dsi_vdo_jt_ivo_ba2",
     .set_util_funcs = lcm_set_util_funcs,
@@ -278,5 +266,4 @@ LCM_DRIVER gc9503p_fwp_dsi_vdo_jt_ivo_ba2_lcm_drv = {
     .suspend = lcm_suspend,
     .resume = lcm_resume,
     .compare_id = lcm_compare_id,
-    .set_dis_on = lcm_display_on,
 };
