@@ -23,12 +23,12 @@ static LCM_UTIL_FUNCS lcm_util = {0};
 // ---------------------------------------------------------------------------
 //  Local Functions
 // ---------------------------------------------------------------------------
-#define dsi_set_cmdq_result(cmd, count, ppara, force_update) lcm_util.dsi_set_cmdq_result(cmd, count, ppara, force_update)
+#define dsi_set_cmdq_V2(cmd, count, ppara, force_update) lcm_util.dsi_set_cmdq_V2(cmd, count, ppara, force_update)
 #define dsi_set_cmdq(pdata, queue_size, force_update) lcm_util.dsi_set_cmdq(pdata, queue_size, force_update)
 #define wrtie_cmd(cmd) lcm_util.dsi_write_cmd(cmd)
 #define write_regs(addr, pdata, byte_nums) lcm_util.dsi_write_regs(addr, pdata, byte_nums)
 #define read_reg(cmd) lcm_util.dsi_dcs_read_lcm_reg(cmd)
-#define read_reg_result(cmd, buffer, buffer_size) lcm_util.dsi_dcs_read_lcm_reg_result(cmd, buffer, buffer_size)
+#define read_reg_v2(cmd, buffer, buffer_size) lcm_util.dsi_dcs_read_lcm_reg_v2(cmd, buffer, buffer_size)
 
 extern int IMM_GetOneChannelValue(int dwChannel, int data[4], int *rawdata);
 
@@ -153,7 +153,7 @@ static void push_table(struct LCM_setting_table *table, unsigned int count, unsi
         case REGFLAG_END_OF_TABLE:
             break;
         default:
-            dsi_set_cmdq_result(cmd, table[i].count, table[i].para_list, force_update);
+            dsi_set_cmdq_V2(cmd, table[i].count, table[i].para_list, force_update);
         }
     }
 }
