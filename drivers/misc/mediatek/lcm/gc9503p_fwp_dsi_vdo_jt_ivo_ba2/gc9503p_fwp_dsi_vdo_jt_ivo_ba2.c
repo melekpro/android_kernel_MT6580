@@ -32,10 +32,6 @@ static LCM_UTIL_FUNCS lcm_util = {0};
 
 extern int IMM_GetOneChannelValue(int dwChannel, int data[4], int *rawdata);
 
-static unsigned long system_time_before = 0;
-static unsigned long system_time_after = 0;
-extern unsigned int jiffies_to_msecs(const unsigned long j);
-
 struct LCM_setting_table
 {
     unsigned cmd;
@@ -254,8 +250,7 @@ static unsigned int lcm_compare_id(void)
 static void lcm_resume(void)
 {
     lcm_init();
-    system_time_before = jiffies_to_msecs(jiffies);
-    UDELAY(5000);
+    MDELAY(5);
 }
 
 LCM_DRIVER gc9503p_fwp_dsi_vdo_jt_ivo_ba2_lcm_drv = {
