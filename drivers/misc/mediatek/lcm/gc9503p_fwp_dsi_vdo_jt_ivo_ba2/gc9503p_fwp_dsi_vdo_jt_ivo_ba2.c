@@ -10,6 +10,12 @@
 // ---------------------------------------------------------------------------
 //  Local Variables
 // ---------------------------------------------------------------------------
+
+#define LCM_DEBUG(fmt, args...)  printk(fmt, ##args)
+#define LCM_ERROR(fmt, args...)  printk(fmt, ##args)
+#define AUXADC_LCM_VOLTAGE_CHANNEL     2
+#define LCM_ID_MAX_VOLTAGE 150
+
 static LCM_UTIL_FUNCS lcm_util = {0};
 
 #define SET_RESET_PIN(v) (lcm_util.set_reset_pin((v)))
