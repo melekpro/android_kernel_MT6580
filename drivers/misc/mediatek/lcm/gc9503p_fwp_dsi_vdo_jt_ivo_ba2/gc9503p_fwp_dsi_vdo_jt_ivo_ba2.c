@@ -230,22 +230,49 @@ static void lcm_suspend(void)
 
 static unsigned int lcm_compare_id(void)
 {
-    int v;
-    int result;
-    int array[4];
+    int data[4] = {0,0,0,0};
+    int res = 0;
+    int rawdata = 0;
+    int lcm_vol = 0;
+#ifdef AUXADC_LCM_VOLTAGE_CHANNEL
+    res = IMM_GetOneChannelValue(AUXADC_LCM_VOLTAGE_CHANNEL,data,&rawdata);
+    if(res < 0)
+    {
+        LCM_ERROR("(%s) gc9503p_fwp_dsi_vdo_jt_ivo_ba2  get lcm chip id vol fail\n", __func__);
+        return 0;
+    }
+#endif
+    lcm_vol = data[0]*1000+data[1]*10;
 
-    memset(array, 0, sizeof(array));
-    result = 0;
-    if (IMM_GetOneChannelValue(1, array, &result) >= 0)
-    {
-        v = 10 * array[1] + 1000 * array[0];
-        return v <= 150 ? 1 : 0;
-    }
+        LCM_DEBUG("(%s) gc9503p_fwp_dsi_vdo_jt_ivo_ba2 lcm chip id adc raw data:%d, lcm_vol:%d\n", __func__, rawdata, lcm_vol);
+
+    if (lcm_vol <= LCM_ID_MAX_VOLTAGE)
+        return 1;
     else
-    {
-        return 1; // TODO: check the above test
-    }
+        return 0;
 }
+
+static void lcm_display_on(void)
+{
+    //unsigned int array[2];
+    unsigned int time_diff;
+    is_lcm_suspend = FALSE;
+    system_time_after = jiffies_to_msecs(jiffies);
+    time_diff = system_time_after - system_time_before;
+    LCM_DEBUG("%s system_time_before:%lu,system_time_after:%lu,time_diff:%d\n",__func__,system_time_before,system_time_after,time_diff);
+    if (100 > time_diff){
+        MDELAY(100 - time_diff);
+    }
+
+    //array[0] = 0x00290500;
+    //dsi_set_cmdq(array, 1, 1);
+    LCM_DEBUG("resume and start to set cmd 29\n");
+    push_table(lcm_29_cmd_setting,sizeof(lcm_29_cmd_setting) /sizeof(struct LCM_setting_table),1);
+    LCM_DEBUG("%s before cmd 29 delay\n",__func__);
+    UDELAY(40000);
+    LCM_DEBUG("%s after cmd 29 delay\n",__func__);
+}
+#endif
 
 static void lcm_resume(void)
 {
@@ -261,4 +288,6 @@ LCM_DRIVER gc9503p_fwp_dsi_vdo_jt_ivo_ba2_lcm_drv = {
     .suspend = lcm_suspend,
     .resume = lcm_resume,
     .compare_id = lcm_compare_id,
-};
+    .set_dis_on = lcm_display_on,
+
+#endif
