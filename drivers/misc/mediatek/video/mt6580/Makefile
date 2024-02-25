@@ -10,8 +10,6 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 #
-#obj-$(CONFIG_MTK_FB) += dispsys/
-#obj-$(CONFIG_MTK_FB) += videox/
 obj-$(CONFIG_MTK_FB) += mtkfb_console.o        \
 			disp_assert_layer.o    \
 			primary_display.o      \
