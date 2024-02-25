@@ -10,12 +10,6 @@
 // ---------------------------------------------------------------------------
 //  Local Variables
 // ---------------------------------------------------------------------------
-
-#define LCM_DEBUG(fmt, args...)  printk(fmt, ##args)
-#define LCM_ERROR(fmt, args...)  printk(fmt, ##args)
-#define AUXADC_LCM_VOLTAGE_CHANNEL     2
-#define LCM_ID_MAX_VOLTAGE 150
-
 static LCM_UTIL_FUNCS lcm_util = {0};
 
 #define SET_RESET_PIN(v) (lcm_util.set_reset_pin((v)))
@@ -236,25 +230,21 @@ static void lcm_suspend(void)
 
 static unsigned int lcm_compare_id(void)
 {
-    int data[4] = {0,0,0,0};
-    int res = 0;
-    int rawdata = 0;
-    int lcm_vol = 0;
-#ifdef AUXADC_LCM_VOLTAGE_CHANNEL
-    res = IMM_GetOneChannelValue(AUXADC_LCM_VOLTAGE_CHANNEL,data,&rawdata);
-    if(res < 0)
-    {LCM_ERROR("(%s) gc9503p_fwp_dsi_vdo_jt_ivo_ba2  get lcm chip id vol fail\n", __func__);
-        return 0;
+    int v;
+    int result;
+    int array[4];
+
+    memset(array, 0, sizeof(array));
+    result = 0;
+    if (IMM_GetOneChannelValue(1, array, &result) >= 0)
+    {
+        v = 10 * array[1] + 1000 * array[0];
+        return v <= 150 ? 1 : 0;
     }
-#endif
-    lcm_vol = data[0]*1000+data[1]*10;
-
-        LCM_DEBUG("(%s) gc9503p_fwp_dsi_vdo_jt_ivo_ba2 lcm chip id adc raw data:%d, lcm_vol:%d\n", __func__, rawdata, lcm_vol);
-
-    if (lcm_vol <= LCM_ID_MAX_VOLTAGE)
-        return 1;
     else
-        return 0;
+    {
+        return 1; // TODO: check the above test
+    }
 }
 
 static void lcm_resume(void)
@@ -272,4 +262,3 @@ LCM_DRIVER gc9503p_fwp_dsi_vdo_jt_ivo_ba2_lcm_drv = {
     .resume = lcm_resume,
     .compare_id = lcm_compare_id,
 };
-
