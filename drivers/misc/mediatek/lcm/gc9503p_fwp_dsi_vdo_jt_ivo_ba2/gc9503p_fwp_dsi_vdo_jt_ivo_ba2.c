@@ -244,7 +244,7 @@ static unsigned int lcm_compare_id(void)
     res = IMM_GetOneChannelValue(AUXADC_LCM_VOLTAGE_CHANNEL,data,&rawdata);
     if(res < 0)
     {
-        LCM_ERROR("(%s) gc9503p_fwp_dsi_vdo_jt_ivo_ba2  get lcm chip id vol fail\n", __func__);
+    LCM_ERROR("(%s) gc9503p_fwp_dsi_vdo_jt_ivo_ba2  get lcm chip id vol fail\n", __func__);
         return 0;
     }
 #endif
